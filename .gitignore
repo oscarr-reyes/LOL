@@ -1,3 +1,5 @@
 protected/tests/
 themes/
 protected/data/
+assets/
+protected/runtime/
