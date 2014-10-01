@@ -1,22 +1,22 @@
 <?php /* @var $this Controller */ ?>
 <?php $this->beginContent('//layouts/main'); ?>
-<div class="span-19">
+<div class="col-xs-12 col-sm-9">
 	<div id="content">
 		<?php echo $content; ?>
 	</div><!-- content -->
 </div>
-<div class="span-5 last">
-	<div id="sidebar">
+<div id="sidebar" class="col-xs-6 col-sm-3 sidebar-offcanvas" role="navigation">
+	<div class="list-group">
 	<?php
-		$this->beginWidget('zii.widgets.CPortlet', array(
-			'title'=>'Operations',
-		));
+		// $this->beginWidget('zii.widgets.CPortlet', array(
+		// 	'title'=>'Operations',
+		// ));
 		$this->widget('zii.widgets.CMenu', array(
 			'items'=>$this->menu,
-			'htmlOptions'=>array('class'=>'operations'),
+			'htmlOptions'=>array('class'=>'nav nav-pills nav-stacked'),
 		));
-		$this->endWidget();
+		// $this->endWidget();
 	?>
-	</div><!-- sidebar -->
+	</div>
 </div>
 <?php $this->endContent(); ?>

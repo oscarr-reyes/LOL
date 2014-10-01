@@ -1,0 +1,1 @@
+<?php echo CHtml::Link(CHtml::image(Yii::app()->baseUrl.'/images/'.$data->Name.'.png', $data->Name), array('/champions/view', 'id'=>$data->id)); ?>
