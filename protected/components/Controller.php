@@ -20,4 +20,18 @@ class Controller extends CController
 	 * for more details on how to specify this property.
 	 */
 	public $breadcrumbs=array();
+
+	public function lookImage($name)
+	{
+		if(strpos($name, "'"))
+			$name = str_replace("'", '', $name);
+
+		if(strpos($name, '.'))
+			$name = str_replace(".", '', $name);
+
+		if(strpos($name, ' '))
+			$name = str_replace(" ", '', $name);
+
+		return $name;
+	}
 }

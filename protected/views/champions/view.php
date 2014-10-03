@@ -18,8 +18,11 @@ $this->menu=array(
 
 <h1>Champion <?php echo $model->Name; ?></h1>
 
+<?php echo CHtml::image(Yii::app()->baseUrl.'/images/'.$this->lookImage($model->Name).'.png', $model->Name); ?>
+
 <?php $this->widget('zii.widgets.CDetailView', array(
 	'data'=>$model,
+	'htmlOptions'=>array('class'=>'table table-hover table-bordered'),
 	'attributes'=>array(
 		'id',
 		'AttackDamage',

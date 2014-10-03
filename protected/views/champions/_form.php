@@ -146,12 +146,12 @@
 		<div class="row">
 			<div class="col-md-6">
 				<?php echo $form->labelEx($model,'AttackSpeed', array('class'=>'control-label')); ?>
-				<?php echo $form->textField($model,'AttackSpeed',array('size'=>4,'maxlength'=>4, 'class'=>'form-control')); ?>
+				<?php echo $form->textField($model,'AttackSpeed',array('size'=>6,'maxlength'=>6, 'class'=>'form-control')); ?>
 				<?php echo $form->error($model,'AttackSpeed'); ?>
 			</div>
 			<div class="col-md-6">
 				<?php echo $form->labelEx($model,'AditionalAttackSpeed', array('class'=>'control-label')); ?>
-				<?php echo $form->textField($model,'AditionalAttackSpeed',array('size'=>4,'maxlength'=>4, 'class'=>'form-control')); ?>
+				<?php echo $form->textField($model,'AditionalAttackSpeed',array('size'=>6,'maxlength'=>6, 'class'=>'form-control')); ?>
 				<?php echo $form->error($model,'AditionalAttackSpeed'); ?>
 			</div>
 		</div>

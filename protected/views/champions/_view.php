@@ -51,7 +51,7 @@ switch($data->Role)
 <div class="view">
 	<div class="row">
 		<div class="col-md-2">
-			<?php echo CHtml::image(Yii::app()->baseUrl.'/images/'.$data->Name.'.png', $data->Name); ?>
+			<?php echo CHtml::image(Yii::app()->baseUrl.'/images/'.$this->lookImage($data->Name).'.png', $data->Name); ?>
 			<h3><?php echo CHtml::link(CHtml::encode($data->Name), array('view', 'id'=>$data->id)); ?></h3>
 		</div>
 

@@ -8,7 +8,7 @@
  * @property string $Name
  * @property double $AttackDamage
  * @property double $AbilityPower
- * @property string $AttackSpeed
+ * @property double $AttackSpeed
  * @property double $MovementSpeed
  * @property double $Armor
  * @property double $MagicResistance
@@ -52,9 +52,8 @@ class Champions extends CActiveRecord
 		return array(
 			array('Name, AttackDamage, AbilityPower, AttackSpeed, MovementSpeed, Armor, MagicResistance, AditionalAttack, AditionalAbility, AditionalArmor, AditionalResist, AditionalAttackSpeed, Health, AditionalHealth, HealthRegen, AditionalHealthRegen, Role, AttackType, Range', 'required'),
 			array('Role, AttackType, Fury', 'numerical', 'integerOnly'=>true),
-			array('AttackDamage, AbilityPower, MovementSpeed, Armor, MagicResistance, AditionalAttack, AditionalAbility, AditionalArmor, AditionalResist, AditionalAttackSpeed, Health, AditionalHealth, HealthRegen, AditionalHealthRegen, Range, Energy, EnergyRegen, Mana, AditionalMana, ManaRegen, AditionalManaRegen', 'numerical'),
+			array('AttackDamage, AbilityPower, AttackSpeed, MovementSpeed, Armor, MagicResistance, AditionalAttack, AditionalAbility, AditionalArmor, AditionalResist, AditionalAttackSpeed, Health, AditionalHealth, HealthRegen, AditionalHealthRegen, Range, Energy, EnergyRegen, Mana, AditionalMana, ManaRegen, AditionalManaRegen', 'numerical'),
 			array('Name', 'length', 'max'=>50),
-			array('AttackSpeed', 'length', 'max'=>4),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('id, Name, AttackDamage, AbilityPower, AttackSpeed, MovementSpeed, Armor, MagicResistance, AditionalAttack, AditionalAbility, AditionalArmor, AditionalResist, AditionalAttackSpeed, Health, AditionalHealth, HealthRegen, AditionalHealthRegen, Role, AttackType, Range, Energy, EnergyRegen, Mana, AditionalMana, ManaRegen, AditionalManaRegen, Fury', 'safe', 'on'=>'search'),
@@ -130,7 +129,7 @@ class Champions extends CActiveRecord
 		$criteria->compare('Name',$this->Name,true);
 		$criteria->compare('AttackDamage',$this->AttackDamage);
 		$criteria->compare('AbilityPower',$this->AbilityPower);
-		$criteria->compare('AttackSpeed',$this->AttackSpeed,true);
+		$criteria->compare('AttackSpeed',$this->AttackSpeed);
 		$criteria->compare('MovementSpeed',$this->MovementSpeed);
 		$criteria->compare('Armor',$this->Armor);
 		$criteria->compare('MagicResistance',$this->MagicResistance);

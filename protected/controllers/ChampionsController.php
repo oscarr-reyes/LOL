@@ -28,7 +28,7 @@ class ChampionsController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view'),
+				'actions'=>array('index','view', 'JSON'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -152,6 +152,37 @@ class ChampionsController extends Controller
 		$this->render('admin',array(
 			'model'=>$model,
 		));
+	}
+
+	/**
+	*  Get all Champions data and return as JSON
+	**/
+	public function actionJSON()
+	{
+		$model = Champions::model()->findAll();
+
+		$champions = null;
+
+		for($i = 0; $i < count($model); $i++)
+		{
+			$champions[$i]['Name'] = $model[$i]->Name;
+			$champions[$i]['Health'] = $model[$i]->Health;
+			$champions[$i]['AditionalHealth'] = $model[$i]->AditionalHealth;
+			$champions[$i]['HealthRegen'] = $model[$i]->HealthRegen;
+			$champions[$i]['AditionalHealthRegen'] = $model[$i]->AditionalHealthRegen;
+			$champions[$i]['AttackDamage'] = $model[$i]->AttackDamage;
+			$champions[$i]['AditionalAttack'] = $model[$i]->AditionalAttack;
+			$champions[$i]['AttackSpeed'] = $model[$i]->AttackSpeed;
+			$champions[$i]['AditionalAttackSpeed'] = $model[$i]->AditionalAttackSpeed;
+			$champions[$i]['MovementSpeed'] = $model[$i]->MovementSpeed;
+			$champions[$i]['Armor'] = $model[$i]->Armor;
+			$champions[$i]['AditionalArmor'] = $model[$i]->AditionalArmor;
+			$champions[$i]['MagicResistance'] = $model[$i]->MagicResistance;
+			$champions[$i]['AditionalResist'] = $model[$i]->AditionalResist;
+		}
+
+		// var_dump($champions);
+		echo json_encode($champions, true);
 	}
 
 	/**
