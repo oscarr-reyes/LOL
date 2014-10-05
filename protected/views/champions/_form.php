@@ -195,10 +195,15 @@
 
 	<div class="form-group">
 		<div class="row">
-			<div class="col-md-6">
+			<div class="col-md-3">
 				<?php echo $form->labelEx($model,'Role', array('class'=>'control-label')); ?>
 				<?php echo $form->dropDownList($model,'Role', array(1=>'Assasin', 2=>'Fighter', 3=>'Mage', 4=>'Marksman', 5=>'Support', 6=>'Tank'), array('class'=>'form-control')); ?>
 				<?php echo $form->error($model,'Role'); ?>
+			</div>
+			<div class="col-md-3">
+				<?php echo $form->labelEx($model,'SecondaryRole', array('class'=>'control-label')); ?>
+				<?php echo $form->dropDownList($model,'SecondaryRole', array(1=>'Assasin', 2=>'Fighter', 3=>'Mage', 4=>'Marksman', 5=>'Support', 6=>'Tank'), array('class'=>'form-control', 'empty'=>'None')); ?>
+				<?php echo $form->error($model,'SecondaryRole'); ?>
 			</div>
 			<div class="col-md-3">
 				<?php echo $form->labelEx($model,'Range', array('class'=>'control-label')); ?>
@@ -207,7 +212,7 @@
 			</div>
 			<div class="col-md-3">
 				<?php echo $form->labelEx($model,'AttackType', array('class'=>'control-label')); ?>
-				<?php echo $form->dropDownList($model,'AttackType', array(1=>'Melee', 2=>'Ranged'), array('class'=>'form-control')); ?>
+				<?php echo $form->dropDownList($model,'AttackType', array(1=>'Melee', 2=>'Ranged', 3=>'Melee/Ranged'), array('class'=>'form-control')); ?>
 				<?php echo $form->error($model,'AttackType'); ?>
 			</div>
 		</div>

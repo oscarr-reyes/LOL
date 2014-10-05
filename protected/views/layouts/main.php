@@ -43,24 +43,39 @@
 				));
 
 
-				$this->widget('zii.widgets.CMenu', array(
-					'htmlOptions'=>array(
-						'class'=>'nav navbar-nav navbar-right',
-						),
-					'encodeLabel'=>false,
-					'items'=>array(
-						array('label'=>'Login', 'url'=>array('site/login'), 'visible'=>Yii::app()->user->isGuest),
-						array('label'=>Yii::app()->user->name.' <span class="caret"></span>', 'url'=>'#', 'visible'=>!Yii::app()->user->isGuest,
-							'itemOptions'=>array('class'=>'dropdown'),
-							'submenuOptions'=>array('class'=>'dropdown-menu'),
-							'linkOptions'=>array('class'=>'dropdown-toggle', 'data-toggle'=>'dropdown'), 
-							'items'=>array(
-								array('label'=>'Logout', 'url'=>array('/site/logout'))
+				if(!Yii::app()->user->isGuest)
+				{
+					$this->widget('zii.widgets.CMenu', array(
+						'htmlOptions'=>array(
+							'class'=>'nav navbar-nav navbar-right',
+							),
+						'encodeLabel'=>false,
+						'items'=>array(
+							// array('label'=>'Login', 'url'=>array('site/login'), 'visible'=>Yii::app()->user->isGuest),
+							array('label'=>Yii::app()->user->name.' <span class="caret"></span>', 'url'=>'#', 'visible'=>!Yii::app()->user->isGuest,
+								'itemOptions'=>array('class'=>'dropdown'),
+								'submenuOptions'=>array('class'=>'dropdown-menu'),
+								'linkOptions'=>array('class'=>'dropdown-toggle', 'data-toggle'=>'dropdown'), 
+								'items'=>array(
+									array('label'=>'Logout', 'url'=>array('/site/logout'))
+								)
 							)
 						)
-					)
-				));
+					));
+				}
 				?>
+				<?php if(Yii::app()->user->isGuest): ?>
+					<?php echo CHtml::beginForm(array('site/login'), 'POST', array('class'=>'navbar-form navbar-right')); ?>
+
+					<div class="form-group">
+						<?php echo CHtml::textField("LoginForm[username]", '', array('class'=>'form-control', 'placeholder'=>'username')); ?>
+						<?php echo CHtml::passwordField("LoginForm[password]", '', array('class'=>'form-control', 'placeholder'=>'password')); ?>
+					</div>
+
+					<?php echo CHtml::submitButton('Login', array('class'=>'btn btn-default')); ?>
+
+					<?php echo CHtml::endForm(); ?>
+				<?php endif; ?>
 			</div><!--/.nav-collapse -->
 		</div>
 	</div>

@@ -22,6 +22,7 @@
  * @property double $HealthRegen
  * @property double $AditionalHealthRegen
  * @property integer $Role
+ * @property integer $SecondaryRole
  * @property integer $AttackType
  * @property double $Range
  * @property double $Energy
@@ -51,12 +52,12 @@ class Champions extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('Name, AttackDamage, AbilityPower, AttackSpeed, MovementSpeed, Armor, MagicResistance, AditionalAttack, AditionalAbility, AditionalArmor, AditionalResist, AditionalAttackSpeed, Health, AditionalHealth, HealthRegen, AditionalHealthRegen, Role, AttackType, Range', 'required'),
-			array('Role, AttackType, Fury', 'numerical', 'integerOnly'=>true),
+			array('Role, SecondaryRole, AttackType, Fury', 'numerical', 'integerOnly'=>true),
 			array('AttackDamage, AbilityPower, AttackSpeed, MovementSpeed, Armor, MagicResistance, AditionalAttack, AditionalAbility, AditionalArmor, AditionalResist, AditionalAttackSpeed, Health, AditionalHealth, HealthRegen, AditionalHealthRegen, Range, Energy, EnergyRegen, Mana, AditionalMana, ManaRegen, AditionalManaRegen', 'numerical'),
 			array('Name', 'length', 'max'=>50),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, Name, AttackDamage, AbilityPower, AttackSpeed, MovementSpeed, Armor, MagicResistance, AditionalAttack, AditionalAbility, AditionalArmor, AditionalResist, AditionalAttackSpeed, Health, AditionalHealth, HealthRegen, AditionalHealthRegen, Role, AttackType, Range, Energy, EnergyRegen, Mana, AditionalMana, ManaRegen, AditionalManaRegen, Fury', 'safe', 'on'=>'search'),
+			array('id, Name, AttackDamage, AbilityPower, AttackSpeed, MovementSpeed, Armor, MagicResistance, AditionalAttack, AditionalAbility, AditionalArmor, AditionalResist, AditionalAttackSpeed, Health, AditionalHealth, HealthRegen, AditionalHealthRegen, Role, SecondaryRole, AttackType, Range, Energy, EnergyRegen, Mana, AditionalMana, ManaRegen, AditionalManaRegen, Fury', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -95,6 +96,7 @@ class Champions extends CActiveRecord
 			'HealthRegen' => 'Health Regen',
 			'AditionalHealthRegen' => 'Aditional Health Regen',
 			'Role' => 'Role',
+			'SecondaryRole' => 'Secondary Role',
 			'AttackType' => 'Attack Type',
 			'Range' => 'Range',
 			'Energy' => 'Energy',
@@ -143,6 +145,7 @@ class Champions extends CActiveRecord
 		$criteria->compare('HealthRegen',$this->HealthRegen);
 		$criteria->compare('AditionalHealthRegen',$this->AditionalHealthRegen);
 		$criteria->compare('Role',$this->Role);
+		$criteria->compare('SecondaryRole',$this->SecondaryRole);
 		$criteria->compare('AttackType',$this->AttackType);
 		$criteria->compare('Range',$this->Range);
 		$criteria->compare('Energy',$this->Energy);

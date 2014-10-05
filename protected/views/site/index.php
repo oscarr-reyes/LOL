@@ -6,7 +6,8 @@ $this->pageTitle=Yii::app()->name;
 
 <h1>Welcome to <i><?php echo CHtml::encode(Yii::app()->name); ?></i></h1>
 
-<?php echo CHtml::Button('Get JSON data', array('class'=>'btn btn-default', 'data-toggle'=>'modal', 'data-target'=>'#ChampJson', 'id'=>'JSON')); ?>
+<?php echo CHtml::Button('Get JSON data', array('class'=>'btn btn-default', 'data-toggle'=>'modal', 'data-target'=>'#ChampJson', 'id'=>'JSON')); ?> 
+<?php echo CHtml::link('Simulator', array('/champions/simulation'), array('class'=>'btn btn-default')); ?>
 
 <?php $this->widget('zii.widgets.CListView', array(
 	'id'=>'champions-grid',

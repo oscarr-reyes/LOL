@@ -22,11 +22,6 @@
 	</div>
 
 	<div class="row">
-		<?php echo $form->label($model,'Lore'); ?>
-		<?php echo $form->textArea($model,'Lore',array('rows'=>6, 'cols'=>50)); ?>
-	</div>
-
-	<div class="row">
 		<?php echo $form->label($model,'AttackDamage'); ?>
 		<?php echo $form->textField($model,'AttackDamage'); ?>
 	</div>

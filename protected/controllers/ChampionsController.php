@@ -28,7 +28,7 @@ class ChampionsController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view', 'JSON'),
+				'actions'=>array('index','view', 'JSON', 'simulation'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -157,32 +157,99 @@ class ChampionsController extends Controller
 	/**
 	*  Get all Champions data and return as JSON
 	**/
-	public function actionJSON()
+	public function actionJSON($id = null)
 	{
-		$model = Champions::model()->findAll();
-
-		$champions = null;
-
-		for($i = 0; $i < count($model); $i++)
+		//Check if id was provided
+		if(!$id)
 		{
-			$champions[$i]['Name'] = $model[$i]->Name;
-			$champions[$i]['Health'] = $model[$i]->Health;
-			$champions[$i]['AditionalHealth'] = $model[$i]->AditionalHealth;
-			$champions[$i]['HealthRegen'] = $model[$i]->HealthRegen;
-			$champions[$i]['AditionalHealthRegen'] = $model[$i]->AditionalHealthRegen;
-			$champions[$i]['AttackDamage'] = $model[$i]->AttackDamage;
-			$champions[$i]['AditionalAttack'] = $model[$i]->AditionalAttack;
-			$champions[$i]['AttackSpeed'] = $model[$i]->AttackSpeed;
-			$champions[$i]['AditionalAttackSpeed'] = $model[$i]->AditionalAttackSpeed;
-			$champions[$i]['MovementSpeed'] = $model[$i]->MovementSpeed;
-			$champions[$i]['Armor'] = $model[$i]->Armor;
-			$champions[$i]['AditionalArmor'] = $model[$i]->AditionalArmor;
-			$champions[$i]['MagicResistance'] = $model[$i]->MagicResistance;
-			$champions[$i]['AditionalResist'] = $model[$i]->AditionalResist;
+			$model = Champions::model()->findAll();
+	
+			$champions = null;
+	
+			for($i = 0; $i < count($model); $i++)
+			{
+				$champions[$i]['Name'] = $model[$i]->Name;
+				$champions[$i]['Health'] = $model[$i]->Health;
+				$champions[$i]['AditionalHealth'] = $model[$i]->AditionalHealth;
+				$champions[$i]['HealthRegen'] = $model[$i]->HealthRegen;
+				$champions[$i]['AditionalHealthRegen'] = $model[$i]->AditionalHealthRegen;
+				$champions[$i]['AttackDamage'] = $model[$i]->AttackDamage;
+				$champions[$i]['AditionalAttack'] = $model[$i]->AditionalAttack;
+				$champions[$i]['AttackSpeed'] = $model[$i]->AttackSpeed;
+				$champions[$i]['AditionalAttackSpeed'] = $model[$i]->AditionalAttackSpeed;
+				$champions[$i]['MovementSpeed'] = $model[$i]->MovementSpeed;
+				$champions[$i]['Armor'] = $model[$i]->Armor;
+				$champions[$i]['AditionalArmor'] = $model[$i]->AditionalArmor;
+				$champions[$i]['MagicResistance'] = $model[$i]->MagicResistance;
+				$champions[$i]['AditionalResist'] = $model[$i]->AditionalResist;
+			}
+	
+			// var_dump($champions);
+			echo json_encode($champions, true);
 		}
 
-		// var_dump($champions);
-		echo json_encode($champions, true);
+		//Return champion data from provided id
+		else
+		{
+			$model = Champions::model()->findByPk($id);
+
+			echo json_encode($model->attributes);
+		}
+	}
+
+	/**
+	*	Display the simulation view
+	**/
+	public function actionSimulation()
+	{
+		if(isset($_GET['champs']))
+		{
+			$dataProvider = new CActiveDataProvider('Champions', array(
+				'pagination'=>array(
+					'pageSize'=>500
+				)
+			));
+
+			$this->widget('zii.widgets.grid.CGridView', array(
+				'id'=>'champions-grid',
+				'ajaxUpdate'=>true,
+				'dataProvider'=>$dataProvider,
+				'itemsCssClass'=>'table',
+				'columns'=>array(
+					array(
+						'name'=>'Name',
+						'type'=>'raw',
+						'value'=>'CHtml::button($data->Name, array("class"=>"btn btn-link", "onClick"=>"getChampionData(".$data->id.")"))'
+					),
+					array(
+						'name'=>'Health',
+						'value'=>'$data->Health." (+".$data->AditionalHealth.")"'
+					),
+					array(
+						'name'=>'AttackDamage',
+						'value'=>'$data->AttackDamage." (+".$data->AditionalAttack.")"'
+					),
+					array(
+						'name'=>'AttackSpeed',
+						'value'=>'$data->AttackSpeed." (+%".$data->AditionalAttackSpeed.")"'
+					),
+					array(
+						'name'=>'Armor',
+						'value'=>'$data->Armor." (+".$data->AditionalArmor.")"'
+					),
+					array(
+						'name'=>'MagicResistance',
+						'value'=>'$data->MagicResistance." (+".$data->AditionalResist.")"'
+					),
+				),
+			));
+		}
+
+		else
+		{
+			$this->layout = '//layouts/column1';
+			$this->render('simulation');
+		}
 	}
 
 	/**
