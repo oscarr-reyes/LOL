@@ -36,7 +36,7 @@ class ChampionsController extends Controller
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete'),
+				'actions'=>array('admin','delete', 'refresh'),
 				'users'=>array('admin'),
 			),
 			array('deny',  // deny all users
@@ -212,34 +212,52 @@ class ChampionsController extends Controller
 
 			$this->widget('zii.widgets.grid.CGridView', array(
 				'id'=>'champions-grid',
-				'ajaxUpdate'=>true,
+				// 'enableSorting'=>false,
 				'dataProvider'=>$dataProvider,
 				'itemsCssClass'=>'table',
 				'columns'=>array(
 					array(
 						'name'=>'Name',
 						'type'=>'raw',
-						'value'=>'CHtml::button($data->Name, array("class"=>"btn btn-link", "onClick"=>"getChampionData(".$data->id.")"))'
+						'value'=>'CHtml::button($data->Name, array("class"=>"btn btn-link", "onClick"=>"getChampionData(".$data->id.")"))',
+						'headerHtmlOptions'=>array(
+							'onClick'=>'updateSelection(this); return false;'
+						)
 					),
 					array(
 						'name'=>'Health',
-						'value'=>'$data->Health." (+".$data->AditionalHealth.")"'
+						'value'=>'$data->Health." (+".$data->AditionalHealth.")"',
+						'headerHtmlOptions'=>array(
+							'onClick'=>'updateSelection(this); return false;'
+						)
 					),
 					array(
 						'name'=>'AttackDamage',
-						'value'=>'$data->AttackDamage." (+".$data->AditionalAttack.")"'
+						'value'=>'$data->AttackDamage." (+".$data->AditionalAttack.")"',
+						'headerHtmlOptions'=>array(
+							'onClick'=>'updateSelection(this); return false;'
+						)
 					),
 					array(
 						'name'=>'AttackSpeed',
-						'value'=>'$data->AttackSpeed." (+%".$data->AditionalAttackSpeed.")"'
+						'value'=>'$data->AttackSpeed." (+%".$data->AditionalAttackSpeed.")"',
+						'headerHtmlOptions'=>array(
+							'onClick'=>'updateSelection(this); return false;'
+						)
 					),
 					array(
 						'name'=>'Armor',
-						'value'=>'$data->Armor." (+".$data->AditionalArmor.")"'
+						'value'=>'$data->Armor." (+".$data->AditionalArmor.")"',
+						'headerHtmlOptions'=>array(
+							'onClick'=>'updateSelection(this); return false;'
+						)
 					),
 					array(
 						'name'=>'MagicResistance',
-						'value'=>'$data->MagicResistance." (+".$data->AditionalResist.")"'
+						'value'=>'$data->MagicResistance." (+".$data->AditionalResist.")"',
+						'headerHtmlOptions'=>array(
+							'onClick'=>'updateSelection(this); return false;'
+						)
 					),
 				),
 			));
@@ -250,6 +268,150 @@ class ChampionsController extends Controller
 			$this->layout = '//layouts/column1';
 			$this->render('simulation');
 		}
+	}
+
+	public function actionRefresh()
+	{
+		$api = $this->apiKey();
+
+		$info = file_get_contents('https://lan.api.pvp.net/api/lol/static-data/lan/v1.2/champion?champData=stats&api_key='.$api);
+
+		$data = json_decode($info);
+
+		$summaryChange = 0;
+		$summaryNew = 0;
+
+		//process every champion
+		foreach($data->data as $dat)
+		{
+			$model = Champions::model()->findByAttributes(array(
+				'Name'=>$dat->name
+			));
+
+			$changed = false;
+
+			if($model)
+			{				
+				if($model->AttackDamage != $dat->stats->attackdamage)
+				{
+					$changed = true;
+
+					$model->AttackDamage = $dat->stats->attackdamage;
+				}
+
+				if($model->MovementSpeed != $dat->stats->movespeed)
+				{
+					$changed = true;
+
+					$model->MovementSpeed = $dat->stats->movespeed;
+				}
+
+				if($model->Armor != $dat->stats->armor)
+				{
+					$changed = true;
+
+					$model->Armor = $dat->stats->armor;
+				}
+
+				if($model->MagicResistance != $dat->stats->spellblock)
+				{
+					$changed = true;
+
+					$model->MagicResistance = $dat->stats->spellblock;
+				}
+
+				if($model->Health != $dat->stats->hp)
+				{
+					$changed = true;
+
+					$model->Health = $dat->stats->hp;
+				}
+
+				if($model->HealthRegen != $dat->stats->hpregen)
+				{
+					$changed = true;
+
+					$model->HealthRegen = $dat->stats->hpregen;
+				}
+
+				if($model->AditionalAttack != $dat->stats->attackdamageperlevel)
+				{
+					$changed = true;
+
+					$model->AditionalAttack != $dat->stats->attackdamageperlevel;
+				}
+
+				if($model->AditionalArmor != $dat->stats->armorperlevel)
+				{
+					$changed = true;
+
+					$model->AditionalArmor = $dat->stats->armorperlevel;
+				}
+
+				if($model->AditionalResist != $dat->stats->spellblockperlevel)
+				{
+					$changed = true;
+
+					$model->AditionalResist != $dat->stats->spellblockperlevel;
+				}
+
+				if($model->AditionalAttackSpeed != $dat->stats->attackspeedperlevel)
+				{
+					$changed = true;
+
+					$model->AditionalAttackSpeed != $dat->stats->attackspeedperlevel;
+				}
+
+				if($model->AditionalHealth != $dat->stats->hpperlevel)
+				{
+					$changed = true;
+
+					$model->AditionalHealth = $dat->stats->hpperlevel;
+				}
+
+				if($model->AditionalHealthRegen != $dat->stats->hpregenperlevel)
+				{
+					$changed = true;
+
+					$model->AditionalHealthRegen = $dat->stats->hpregenperlevel;
+				}
+
+
+				$model->save();
+			}
+
+
+			if(!$model)
+			{
+				$champion = new Champions;
+
+				$champion->Name = $dat->stats->name;
+				$champion->AttackDamage = $dat->stats->attackdamage;
+				$champion->MovementSpeed = $dat->stats->movespeed;
+				$champion->Armor = $dat->stats->armor;
+				$champion->MagicResistance = $dat->stats->spellblock;
+				$champion->Health = $dat->stats->hp;
+				$champion->HealthRegen = $dat->stats->hpregen;
+				$champion->AditionalAttack != $dat->stats->attackdamageperlevel;
+				$champion->AditionalArmor = $dat->stats->armorperlevel;
+				$champion->AditionalResist != $dat->stats->spellblockperlevel;
+				$champion->AditionalAttackSpeed != $dat->stats->attackspeedperlevel;
+				$champion->AditionalHealth = $dat->stats->hpperlevel;
+				$champion->AditionalHealthRegen = $dat->stats->hpregenperlevel;
+
+				if($champion->save())
+					$summaryNew++;
+			}
+
+			if($changed)
+			{
+				$summaryChange++;
+				// echo $dat->name.' changed <br>';
+			}
+		}
+
+		echo $summaryChange.' Champion/s updated<br>';
+		echo $summaryNew.' Champion/s created<br>';
 	}
 
 	/**

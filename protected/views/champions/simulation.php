@@ -1,11 +1,35 @@
+<?php //Yii::app()->getClientScript()->registerScriptFile('../js/jquery.cgridview.js'); ?>
+
 <h1>Champion fight simulator</h1>
 <hr>
 <div id="simulator"></div>
 
 <div class="row">
 	<div class="col-md-6">
-		<div style="height: 120px; background-color: black; width: 120px;" id="Champion1" class="Champion"><img id="Champion1-img" src="<?php echo Yii::app()->baseUrl; ?>/images/unselect.png"></div>
+		<div class="row">
+			<div class="col-md-3">
+				<div style="height: 120px; background-color: black; width: 120px;" id="Champion1" class="Champion"><img id="Champion1-img" src="<?php echo Yii::app()->baseUrl; ?>/images/unselect.png"></div>
+			</div>
+
+			<div class="col-md-9">
+				<p class="help-block"><- Click to select champion.</p>
+				<div class="progress">
+					<div id="Champion1-Health" class="progress-bar progress-bar-success" style="width: 0%;">
+					</div>
+					<div class="progress-bar progress-bar-danger" style="width: 0%;">
+					</div>
+				</div>
+
+				<div class="progress">
+					<div id="Champion1-Resource" class="progress-bar progress-bar-success" style="width: 0%;">
+					</div>
+					<div class="progress-bar progress-bar-danger" style="width: 0%;">
+					</div>
+				</div>
+			</div>
+		</div>
 		<br>
+
 		<!-- Table Stats -->
 		<?php
 		$this->widget('zii.widgets.CDetailView', array(
@@ -82,8 +106,30 @@
 		?>
 	</div>
 	<div class="col-md-6">
-		<div style="height: 120px; background-color: black; width: 120px;" id="Champion2" class="Champion"><img id="Champion2-img" src="<?php echo Yii::app()->baseUrl; ?>/images/unselect.png"></div>
-<br>
+		<div class="row">
+			<div class="col-md-3">
+				<div style="height: 120px; background-color: black; width: 120px;" id="Champion2" class="Champion"><img id="Champion2-img" src="<?php echo Yii::app()->baseUrl; ?>/images/unselect.png"></div>
+			</div>
+
+			<div class="col-md-9">
+				<p class="help-block"><- Click to select champion.</p>
+				<div class="progress">
+					<div id="Champion2-Health" class="progress-bar progress-bar-success" style="width: 0%;">
+					</div>
+					<div class="progress-bar progress-bar-danger" style="width: 0%;">
+					</div>
+				</div>
+
+				<div class="progress">
+					<div id="Champion2-Resource" class="progress-bar progress-bar-success" style="width: 0%;">
+					</div>
+					<div class="progress-bar progress-bar-danger" style="width: 0%;">
+					</div>
+				</div>
+			</div>
+		</div>
+		<br>
+
 		<!-- Table Stats -->
 		<?php
 		$this->widget('zii.widgets.CDetailView', array(
@@ -169,9 +215,10 @@
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 				<h4 class="modal-title" id="myModalLabel">Champion Selection</h4>
+				<p class="help-block">Sort by clicking label</p>
 			</div>
 			<div class="modal-body">
-				Loading..
+				<?php echo CHtml::image(Yii::app()->baseUrl.'/images/ajax-loader.gif', 'loading'); ?>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -242,9 +289,10 @@
 				{
 					champion1 = JSON.parse(data);
 
-					$('#Champion1-img').attr('src', getImgUrl(champion1.Name));
+					if(typeof champion1 !== 'undefined')
+						champion1.currentHealth = champion1.Health;
 
-					console.log(champion1);
+					$('#Champion1-img').attr('src', getImgUrl(champion1.Name));
 
 					showDataStats(champion1);
 				}
@@ -252,6 +300,9 @@
 				if(selection == 'Champion2')
 				{
 					champion2 = JSON.parse(data);
+
+					if(typeof champion2 !== 'undefined')
+						champion2.currentHealth = champion2.Health;
 
 					$('#Champion2-img').attr('src', getImgUrl(champion2.Name));
 
@@ -322,8 +373,9 @@
 			else
 				$('#' + data).text(result[data]);
 		}
-
+	
 		checkValues(champ);
+		checkBars();
 	}
 
 	//Check values in stats (change to null whenever data is 0)
@@ -339,6 +391,43 @@
 					$('#' + data).text('null');
 			}
 		});
-		
+	}
+
+	//Check health and resource bars for both champions
+	function checkBars()
+	{
+		if(typeof champion1 !== 'undefined')
+		{
+			//Champion1 Health
+			championMaxHealth1 = champion1.Health;
+			championHealthBar1 = $('#Champion1-Health');
+			championHealthBar1.width(getPercentage(champion1.currentHealth, champion1.Health).toString() + '%');
+
+			if(champion1.currentHealth > 0)
+				championHealthBar1.text(champion1.currentHealth);
+
+			else
+				championHealthBar1.text('');
+		}
+
+		if(typeof champion2 !== 'undefined')
+		{
+			championMaxHealth2 = champion2.Health;
+			championHealthBar2 = $('#Champion2-Health');
+			championHealthBar2.width(getPercentage(champion2.currentHealth, champion2.Health).toString() + '%');
+
+			if(champion2.currentHealth > 0)
+				championHealthBar2.text(champion2.currentHealth);
+
+			else
+				championHealthBar2.text('');
+		}
+
+	}
+
+	function getPercentage(value, max)
+	{
+		return value / max * 100;
 	}
 </script>
+<script type="text/javascript" src="<?php echo Yii::app()->baseUrl; ?>/js/util.js"></script>
